@@ -157,6 +157,7 @@ class NeuralNetwork:
         plt.imshow(image, cmap='gray')
         plt.show()
 
+
     def saveParams(self):
         #saves the parameters of our current model into 
         #a csv file to reuse the same parameters and avoid
@@ -173,14 +174,6 @@ class NeuralNetwork:
 
 
 
-
-
-
-#create a network
-#inputing an argument of true loads in the 
-#parameters from the csv files of an 
-#already trained model
-network = NeuralNetwork(True)
 
 #get the data from the csv
 data = pd.read_csv('mnsit_data/mnist_train.csv')
@@ -206,20 +199,39 @@ test_inputs = test_data[1:y]
 
 
 
-print('training...')
-#train the network with an alpha of 0.1 
-#for 500 trials
-network.train(data_inputs, data_labels, m, 0.1, 500)
+#create a network
+#inputing an argument of true loads in the 
+#parameters from the csv files of an 
+#already trained model
+print("Would you like to load a presaved network?")
+pretrained = int(input("Enter a 1 for yes, 0 for no:"))
 
-network.train(test_inputs, test_labels, m, 0.1, 250)
+
+network = NeuralNetwork(pretrained)
+
+if (not pretrained):
+    print("how many trials would you like to run?")
+    trials = int(input("Enter:"))
+
+    print("training...")
+    network.train(data_inputs, data_labels, m, 0.1, trials)
 
 
-print('testing')
+print("Run the network through tests, press 0 to stop tests")
 
-#run the model through a test of 10 digits to see how it preforms
-for i in range(10):
+testing = True
+
+while testing:
     index = randint(0, 10000)
     network.test(index, test_inputs, test_labels)
+
+    print("would you like to run another test")
+
+    decision = int(input("Enter a 1 to continue, a 0 to quit:"))
+
+    if(decision <= 0):
+        testing = False
+
 
 
 
